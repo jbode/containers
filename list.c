@@ -38,7 +38,7 @@ List *listCreate( void *(*kcpy)(const void *), void *(*dcpy)(const void *), void
 
     l->head = nodeCreate( &i, NULL, createInt, NULL );
     l->tail = nodeCreate( &i, NULL, createInt, NULL );
-    insertBefore( l->head, l->tail );
+    nodeInsertBefore( l->head, l->tail );
   }
   return l;
 }
@@ -50,7 +50,7 @@ void listClear( List *l )
 
   while ( nodeNext( l->head ) != l->tail )
   {
-    toDelete = removeAfter( l->head );
+    toDelete = nodeRemoveAfter( l->head );
     nodeDestroy( toDelete, l->kfree, l->dfree );
   }
 }
@@ -80,7 +80,7 @@ Node *listInsert( List *l, const void *key, const void *data )
     Node *cur;
     for ( cur = nodeNext( l->head ); cur != l->tail && l->kcmp( nodeKey( cur ), key ) < 0; cur = nodeNext( cur ) )
       ;
-    if ( !insertBefore( n, cur ) )
+    if ( !nodeInsertBefore( n, cur ) )
     {
       nodeDestroy( n, l->kfree, l->dfree );
       n = NULL;
@@ -106,7 +106,7 @@ Node *listInsertAt( List *l, const void *key, const void *data, size_t pos )
     for ( size_t i = 0; i < pos; i++ )
       cur = nodeNext( cur );
 
-    if ( !insertBefore( n, cur ) )
+    if ( !nodeInsertBefore( n, cur ) )
     {
       nodeDestroy( n, l->kfree, l->dfree );
       n = NULL;
@@ -125,7 +125,7 @@ Node *listPush( List *l, const void *key, const void *data )
   Node *n = nodeCreate( key, data, l->kcpy, l->dcpy );
   if ( n )
   {
-    if ( !insertAfter( n, l->head ) )
+    if ( !nodeInsertAfter( n, l->head ) )
     {
       nodeDestroy( n, l->kfree, l->dfree );
       n = NULL;
@@ -144,7 +144,7 @@ Node *listAppend( List *l, const void *key, const void *data )
   Node *n = nodeCreate( key, data, l->kcpy, l->dcpy );
   if ( n )
   {
-    if ( !insertBefore( n, l->tail ) )
+    if ( !nodeInsertBefore( n, l->tail ) )
     {
       nodeDestroy( n, l->kfree, l->dfree );
       n = NULL;
@@ -233,7 +233,7 @@ Node *listRemoveAt( List *l, size_t pos )
   if ( n == l->tail )
     return NULL;
 
-  n = removeBefore( nodeNext( n ) );
+  n = nodeRemoveBefore( nodeNext( n ) );
   if ( n )
     l->count--;
 
@@ -252,7 +252,7 @@ Node *listRemove( List *l, const void *key )
   if ( !n || n == l->tail )
     return NULL;
 
-  n = removeBefore( nodeNext( n ) );
+  n = nodeRemoveBefore( nodeNext( n ) );
   if ( n )
     l->count--;
 
@@ -266,7 +266,7 @@ Node *listPop( List *l )
   if ( nodeNext( l->head ) == l->tail )
     return NULL;
 
-  Node *n = removeAfter( l->head );
+  Node *n = nodeRemoveAfter( l->head );
   if ( n )
     l->count--;
 
@@ -280,7 +280,7 @@ Node *listPopTail( List *l )
   if ( nodePrev( l->tail ) == l->head )
     return false;
 
-  Node *n = removeBefore( l->tail );
+  Node *n = nodeRemoveBefore( l->tail );
   if ( n )
     l->count--;
 
