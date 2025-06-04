@@ -10,12 +10,18 @@ void nodeDestroy( Node *n, void (*kfree)(void *), void (*dfree)(void *) );
 
 Node *nodeNext( const Node *n );
 Node *nodePrev( const Node *n );
+Node *nodeLeft( const Node *n );
+Node *nodeRight( const Node *n );
+Node *nodeParent( const Node *n );
+Node *nodeInsertBefore( Node *toInsert, Node *current );
+Node *nodeInsertAfter( Node *toInsert, Node *current );
+Node *nodeInsertLeft( Node *toInsert, Node *parent );
+Node *nodeInsertRight( Node *toInsert, Node *parent );
 
-Node *insertBefore( Node *toInsert, Node *current );
-Node *insertAfter( Node *toInsert, Node *current );
-
-Node *removeBefore( Node *current );
-Node *removeAfter( Node *current );
+Node *nodeRemoveBefore( Node *current );
+Node *nodeRemoveAfter( Node *current );
+Node *nodeRemoveLeft( Node *current );
+Node *nodeRemoveRight( Node *current );
 
 void *nodeKey( const Node *n );
 void *nodeData( const Node *n );
