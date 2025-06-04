@@ -48,33 +48,51 @@ int cmpStr( const void *l, const void *r )
   return strcmp( (const char *) l, (const char *) r );
 }
 
-int main( void )
+#ifndef SIZE
+#define SIZE 10
+#endif
+
+int main( int argc, char **argv )
 {
+  size_t count = SIZE;
+  if ( argc > 1 )
+    count = strtoul( argv[1], NULL, 10 );
+
   srand(time(NULL));
 
+  List *l = listCreate( copyInt, NULL, free, NULL, cmpInt );
   List *li = listCreate( copyInt, copyStr, free, free, cmpInt );
   List *ls = listCreate( copyStr, copyInt, free, free, cmpStr );
-  if ( li && ls )
+
+  if ( l && li && ls )
   {
-    for ( size_t i = 0; i < 10; i++ )
+    for ( size_t i = 0; i < count; i++ )
     {
       int val = rand() % 1000;
       char buf[16];
- 
-      printf( "    inserting %d, \"%s\"\n", val, randomStr( buf, sizeof buf ) );
-      Node *ni = listInsert( li, &val, buf );
-      printf( "    inserting \"%s\", %d\n", buf, val );
+
+      
+      Node *n = listInsert( l, &val, NULL ); 
+      Node *ni = listInsert( li, &val, randomStr( buf, sizeof buf ) );
       Node *ns = listInsert( ls, buf, &val );
-      if ( !ni || !ns )
+
+      if ( !n || !ni || !ns )
       {
         fputs( "    Error inserting value\n", stderr );
         break;
       }
     }
 
+    printf( "     l list size: %zu\n", listSize( l ) );
     printf( "    li list size: %zu\n", listSize( li ) );
     printf( "    ls list size: %zu\n", listSize( ls ) );
 
+    puts( "    l list contents: " );
+    for ( Node *n = listPop( l ); n; n = listPop( l ) )
+    {
+      printf( "\t    value: %5d\n", *(int *) nodeKey( n ) );
+      nodeDestroy( n, free, NULL );
+    }
     puts( "    li list contents: " );
     for ( Node *n = listPop( li ); n; n = listPop( li ) )
     {
