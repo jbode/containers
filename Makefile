@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-std=c17 -Wall -Werror -Wextra -g -DSIZE=$(size) -MP -MD
+CFLAGS=-std=c17 -Wall -Werror -Wextra -g -MP -MD -pg
 LDLIBS=-lm
 
 SRCS=node.c list.c main.c
