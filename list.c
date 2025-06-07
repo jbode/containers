@@ -34,7 +34,7 @@ List *listCreate( void *(*kcpy)(const void *), void *(*dcpy)(const void *), void
     l->dfree = dfree;
     l->kcmp = kcmp;
 
-    int i;
+    int i = 0;
 
     l->head = nodeCreate( &i, NULL, createInt, NULL );
     l->tail = nodeCreate( &i, NULL, createInt, NULL );
